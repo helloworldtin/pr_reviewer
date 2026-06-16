@@ -1,0 +1,67 @@
+import Image from "next/image";
+import Link from "next/link";
+
+import { DASHBOARD_ROUTES } from "@/features/dashboard/lib/routes";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
+  SidebarSeparator,
+} from "@/components/ui/sidebar";
+import { UserMenu } from "@/features/auth/components/user-menu";
+import { DashboardNav } from "./dashboard-nav";
+import { SidebarUserButton } from "./side-bar-user-btn";
+
+type DashboardSidebarProps = {
+  user: UserMenu;
+  plan?: string;
+};
+
+export function DashboardSidebar({
+  user,
+  plan = "Pro",
+}: DashboardSidebarProps) {
+  return (
+    <Sidebar collapsible="icon">
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              size="lg"
+              tooltip="ChaiCodeAIReview"
+              render={
+                <Link href={DASHBOARD_ROUTES.overview}>
+                  <span className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-none bg-sidebar">
+                    <Image
+                      src="/logo.svg"
+                      alt=""
+                      width={62}
+                      height={62}
+                      className="object-contain"
+                    />
+                  </span>
+                  <span className="grid flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
+                    <span className="truncate font-medium">Code Reviewer</span>
+                  </span>
+                </Link>
+              }
+            />
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+      <SidebarContent>
+        <DashboardNav />
+      </SidebarContent>
+      <SidebarFooter>
+        <SidebarSeparator />
+        <SidebarUserButton user={user} plan={plan} />
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
+  );
+}
