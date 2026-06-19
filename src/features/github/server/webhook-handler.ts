@@ -1,5 +1,6 @@
-import { savePullRequest } from "@/features/reviews/save-pull-request";
+import { savePullRequest } from "@/features/reviews/server/save-pull-request";
 import { getGithubApp } from "../utils/github-app";
+import { inngest } from "@/features/inngest/client";
 
 const REVIEWABLE_ACTIONS = ["opened", "synchronize", "reopened"];
 
@@ -43,9 +44,10 @@ export async function handleGithubWebhook(request: Request) {
     return Response.json({ received: true });
 
   const pullRequest = await savePullRequest(event);
-
-  // TODO: Map Github installation
-  // TODO: Trigger AI review JOB.
+  await inngest.send({
+    name: "github/pr.received",
+    data: { pullRequestId: pullRequest.id },
+  });
 
   return Response.json({ received: true });
 }
